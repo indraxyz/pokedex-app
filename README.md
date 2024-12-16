@@ -1,3 +1,7 @@
+## Deploymen link
+
+https://pokedex-app-three-zeta.vercel.app/
+
 ## Setup or Run Locally
 
     download or Clone this project
