@@ -20,7 +20,6 @@ import {
 } from "@mui/material";
 import { CloseRounded } from "@mui/icons-material";
 import heroImage from "../public/hero.png";
-// import { pokemons as mock_pokemons } from "../src/mock-data";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import NProgress from "../src/components/NProgress/Progress";
@@ -93,12 +92,12 @@ const Pokemon = () => {
   }
 
   async function pokemon_fetch(key: number) {
-    syncLoading()
+    syncLoading();
     const res = await fetch(`/api/pokemon/${key}`);
     const json_pokemon = await res.json();
     setPokemon(json_pokemon);
     setDialogDetail(true);
-    syncLoading()
+    syncLoading();
     console.log(json_pokemon);
   }
 

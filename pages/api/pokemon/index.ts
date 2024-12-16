@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 
 // type api response
@@ -16,7 +15,6 @@ export default async function handler(
 ) {
   try {
     // fetch here, all pokemons
-    // https://pokeapi.co/api/v2/pokemon?offset=0&limit=20
     const { offset, limit } = req.query;
     const resPokemons = await fetch(
       `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`

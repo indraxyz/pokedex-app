@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 
 // type api response
@@ -12,7 +11,6 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   try {
-
     const resTypes = await fetch(
       `https://pokeapi.co/api/v2/type?offset=0&limit=30`
     );

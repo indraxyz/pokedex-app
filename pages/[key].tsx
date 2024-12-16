@@ -84,7 +84,6 @@ const PokemonDetail = ({ query }: Props) => {
       <NProgress isAnimating={loading.isAnimating} key={loading.key} />
 
       <Button onClick={() => router.push(`/`)}>Back to Pokedex</Button>
-      {/* <span>Detail Pokemon of {key} (image + detail + stats + evolution)</span> */}
 
       <Box component={"div"} className="justify-self-center">
         {/* image */}

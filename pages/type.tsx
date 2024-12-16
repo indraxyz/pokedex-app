@@ -88,7 +88,6 @@ const PokemonType = ({ query }: Props) => {
 
     // first set data Table
     setDataTable(json.pokemons.slice(0, 9));
-
     syncLoading();
   }
 
@@ -150,7 +149,6 @@ const PokemonType = ({ query }: Props) => {
       {/* drawer */}
       <Drawer open={drawer} onClose={() => setDrawer(false)} anchor="right">
         {DrawerList}
-        {/* <span>drawer</span> */}
       </Drawer>
 
       {/* list data */}
@@ -192,8 +190,6 @@ const PokemonType = ({ query }: Props) => {
 };
 
 PokemonType.getInitialProps = async (ctx: NextPageContext) => {
-  // const res = await fetch('https://api.github.com/repos/vercel/next.js')
-  // const json = await res.json()
   const { query } = ctx;
   return { query };
 };
