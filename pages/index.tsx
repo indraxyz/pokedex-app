@@ -1,114 +1,326 @@
+import { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  Typography,
+  Pagination,
+  Stack,
+  Grid2 as Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  CardActionArea,
+  Dialog,
+  DialogContent,
+  Chip,
+  IconButton,
+  Paper,
+  Skeleton,
+} from "@mui/material";
+import { CloseRounded } from "@mui/icons-material";
+import heroImage from "../public/hero.png";
+// import { pokemons as mock_pokemons } from "../src/mock-data";
 import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { useRouter } from "next/router";
+import NProgress from "../src/components/NProgress/Progress";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+type pokemons_type = { name: string; url: string }[];
+type pokemon_type = {
+  id?: number;
+  name?: string;
+  height?: number;
+  weight?: number;
+  species?: string;
+  types?: object[];
+  abilities?: object[];
+  image?: string;
+};
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+type Abilities = {
+  ability?: Ability | undefined;
+};
+type Ability = {
+  name?: string;
+};
 
-export default function Home() {
+type Types = {
+  type?: Type;
+};
+type Type = {
+  name?: string;
+};
+
+const Pokemon = () => {
+  const [skeleton, setSkeleton] = useState(false);
+  const [loading, setLoading] = useState({
+    isAnimating: false,
+    key: 0,
+  });
+  const router = useRouter();
+  const [pokemons, setPokemons] = useState<pokemons_type>([]);
+  const [offset, setOffset] = useState(0);
+  const pokemonsCount = 1025; // last pokemon is pecharunt at 1025
+  const limit = 24;
+  const img_url =
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
+
+  const [dialogDetail, setDialogDetail] = useState(false);
+  const [pokemon, setPokemon] = useState<pokemon_type>({});
+
+  //   didMount
+  useEffect(() => {
+    pokemons_fetch(offset, limit);
+  }, []);
+
+  const syncLoading = () => {
+    setLoading((prev) => ({
+      isAnimating: !prev.isAnimating,
+      key: prev.isAnimating ? prev.key : prev.key ^ 1,
+    }));
+  };
+
+  async function pokemons_fetch(offset: number, limit: number) {
+    setSkeleton(true);
+    syncLoading();
+
+    const res = await fetch(`/api/pokemon?offset=${offset}&limit=${limit}`);
+    const json_pokemons = await res.json();
+
+    setPokemons(json_pokemons.pokemons);
+    setSkeleton(false);
+    syncLoading();
+  }
+
+  async function pokemon_fetch(key: number) {
+    syncLoading()
+    const res = await fetch(`/api/pokemon/${key}`);
+    const json_pokemon = await res.json();
+    setPokemon(json_pokemon);
+    setDialogDetail(true);
+    syncLoading()
+    console.log(json_pokemon);
+  }
+
+  const paginateTo = (p: number) => {
+    const of = (p - 1) * limit;
+    pokemons_fetch(of, limit);
+    setOffset(of);
+  };
+
+  const detailPokemon = (id: number) => {
+    // console.log(id);
+    pokemon_fetch(id);
+  };
+
   return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <Container>
+      <NProgress isAnimating={loading.isAnimating} key={loading.key} />
+      {/* WELCOME MESSAGE */}
+      <Box
+        component={"div"}
+        className="justify-items-center content-center text-center  min-h-screen "
+      >
+        <Image src={heroImage} alt="" className="w-72 h-auto" priority />
+        <Typography variant="h3" className="font-medium my-4">
+          PokeDex App
+        </Typography>
+        <Button
+          variant="contained"
+          href="#pokedex"
+          className="text-xl font-bold"
+        >
+          Check PokeDex
+        </Button>
+      </Box>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      {/* list of pokemons */}
+      <Grid
+        container
+        spacing={{ xs: 2, md: 4 }}
+        id="pokedex"
+        columns={{ xs: 2, sm: 8, md: 12 }}
+        sx={{ paddingTop: 4 }}
+      >
+        {skeleton ? (
+          <>
+            <Grid size={{ xs: 2, sm: 4, md: 4 }}>
+              <Skeleton variant="rounded" className="w-full h-72" />
+            </Grid>
+            <Grid size={{ xs: 2, sm: 4, md: 4 }}>
+              <Skeleton variant="rounded" className="w-full h-72" />
+            </Grid>
+            <Grid size={{ xs: 2, sm: 4, md: 4 }}>
+              <Skeleton variant="rounded" className="w-full h-72" />
+            </Grid>
+          </>
+        ) : (
+          pokemons.map((p, i) => {
+            const idPokemon = i + 1 + offset;
+            return (
+              <Grid key={i} size={{ xs: 2, sm: 4, md: 4 }}>
+                <Card>
+                  <CardActionArea onClick={() => detailPokemon(idPokemon)}>
+                    <CardMedia
+                      component="img"
+                      image={`${img_url + idPokemon}.png`}
+                      alt={p.name}
+                      loading="lazy"
+                      className="w-72 justify-self-center"
+                    />
+                    <CardContent>
+                      <Typography
+                        gutterBottom
+                        variant="h5"
+                        component="div"
+                        className="text-center capitalize font-medium"
+                      >
+                        {p.name}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary" }}
+                      >
+                        #{idPokemon}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            );
+          })
+        )}
+      </Grid>
+      {/* paginaation */}
+      <Stack spacing={2} className="my-10 items-center">
+        <Pagination
+          count={Math.ceil(pokemonsCount / 24)}
+          color="primary"
+          onChange={(e, p) => paginateTo(p)}
+        />
+      </Stack>
+
+      {/* DIALOG DETAIL POKEMON */}
+      <Dialog
+        fullWidth
+        maxWidth="sm"
+        open={dialogDetail}
+        onClose={() => setDialogDetail(false)}
+      >
+        <IconButton
+          aria-label="close"
+          onClick={() => setDialogDetail(false)}
+          sx={{
+            position: "absolute",
+            right: 24,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <CloseRounded />
+        </IconButton>
+        <DialogContent>
+          {/* sign in form or sosmed acc */}
+          <Box component={"div"} className="space-y-6">
+            <Box className="justify-self-center">
+              <img src={pokemon.image} alt={pokemon.name} loading="lazy" />
+            </Box>
+
+            <Box component={"div"} className="text-center">
+              <Typography className="text-2xl font-semibold">
+                # {pokemon.id}
+              </Typography>
+              <Typography className="text-2xl font-semibold capitalize tracking-wider">
+                {pokemon.name}
+              </Typography>
+            </Box>
+
+            <Paper square={false} elevation={3} className="p-8 rounded-2xl">
+              <div className="space-y-4">
+                <Box>
+                  <Typography variant="h5">{pokemon.id}</Typography>
+                  <Typography variant="body2" className="tracking-wider">
+                    ID
+                  </Typography>
+                </Box>
+                <Box className="mt-2">
+                  <Typography variant="h5" className="capitalize">
+                    {pokemon.name}
+                  </Typography>
+                  <Typography variant="body2" className="tracking-wider">
+                    Name
+                  </Typography>
+                </Box>
+                <Box className="mt-2">
+                  <Typography variant="h5">
+                    {Number(pokemon.height) / 10} m
+                  </Typography>
+                  <Typography variant="body2" className="tracking-wider">
+                    Height
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="h5">
+                    {Number(pokemon.weight) / 10} kg
+                  </Typography>
+                  <Typography variant="body2" className="tracking-wider">
+                    Weight
+                  </Typography>
+                </Box>
+                <Box>
+                  <div className="capitalize space-x-2 my-2 pt-1">
+                    {pokemon.abilities?.map((a: Abilities, i) => {
+                      return (
+                        <Chip
+                          key={i}
+                          label={a.ability?.name}
+                          variant="outlined"
+                        />
+                      );
+                    })}
+                  </div>
+
+                  <Typography variant="body2" className="tracking-wider">
+                    Abilities
+                  </Typography>
+                </Box>
+                <Box>
+                  <div className="capitalize space-x-2  my-2 pt-1">
+                    {pokemon.types?.map((t: Types, i) => {
+                      return (
+                        <Chip
+                          key={i}
+                          label={t.type?.name}
+                          variant="outlined"
+                          clickable
+                          onClick={() =>
+                            router.push(`/type?type=${t.type?.name}`)
+                          }
+                        />
+                      );
+                    })}
+                  </div>
+                  <Typography variant="body2" className="tracking-wider">
+                    Types
+                  </Typography>
+                </Box>
+              </div>
+            </Paper>
+
+            <Button
+              fullWidth
+              variant="contained"
+              className="text-lg font-bold"
+              onClick={() => router.push(`/${pokemon.id}`)}
+              // href={`/${pokemon.id}`}
+            >
+              More Details
+            </Button>
+          </Box>
+        </DialogContent>
+      </Dialog>
+    </Container>
   );
-}
+};
+
+export default Pokemon;
