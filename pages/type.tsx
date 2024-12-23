@@ -51,6 +51,7 @@ const PokemonType = ({ query }: Props) => {
   const [drawer, setDrawer] = useState(false);
   const [filterType, setFilterType] = useState("normal");
   const [dataTable, setDataTable] = useState([]);
+  const [selectedPage, setSelectedPage] = useState(1);
 
   //   didMount
   useEffect(() => {
@@ -94,6 +95,7 @@ const PokemonType = ({ query }: Props) => {
   const paginateTo = (p: number) => {
     const of = (p - 1) * 9;
     setDataTable(Array.from(pokemons.slice(of, 9 * p)));
+    setSelectedPage(p);
   };
 
   const DrawerList = (
@@ -118,6 +120,7 @@ const PokemonType = ({ query }: Props) => {
               onClick={() => {
                 setDrawer(false);
                 setFilterType(t.name);
+                setSelectedPage(1);
                 fetchPokemonByType(t.name);
               }}
             >
@@ -139,8 +142,8 @@ const PokemonType = ({ query }: Props) => {
         size="medium"
         sx={{
           position: "fixed",
-          right: 24,
-          bottom: 8,
+          right: 20,
+          bottom: 20,
         }}
       >
         <MenuIcon />
@@ -183,6 +186,8 @@ const PokemonType = ({ query }: Props) => {
           count={Math.ceil(pokemons.length / 9)}
           color="primary"
           onChange={(e, p) => paginateTo(p)}
+          defaultPage={1}
+          page={selectedPage}
         />
       </Stack>
     </Container>

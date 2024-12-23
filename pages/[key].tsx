@@ -87,7 +87,13 @@ const PokemonDetail = ({ query }: Props) => {
 
       <Box component={"div"} className="justify-self-center">
         {/* image */}
-        <img src={pokemon.image} srcSet="" alt={pokemon.name} loading="lazy" />
+        <img
+          src={pokemon.image}
+          srcSet=""
+          alt={pokemon.name}
+          loading="lazy"
+          className="w-72 sm:w-auto"
+        />
       </Box>
 
       <Box component={"div"} className="text-center my-4">
