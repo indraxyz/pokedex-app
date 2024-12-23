@@ -10,14 +10,14 @@ https://pokedex-app-three-zeta.vercel.app/
 
 ## Features of Pokedex App
 
-Home Page : show pokemons data (card view) and detail pokemon.
-Detail Pokemon Page : More detail of Pokemon Data.
-Pokemon Type Page : LPokemons data filter by Type.
+    Home Page : show pokemons data (card view) and detail pokemon.
+    Detail Pokemon Page : More detail of Pokemon Data.
+    Pokemon Type Page : LPokemons data filter by Type.
 
 ## Technical Decisions
 
-TechStack using typescript, nextjs, material ui
+TechStack using typescript, nextjs, material ui, tailwind
 
 ## Future Improvements
 
-evolusi pokemon, search pokemon by name, react query, extract components, theme switching light/dark, documentation
+pokemon evolution, search pokemon by name, favourite pokemons (local storage), react query, extract components, theme switching light/dark, documentation
