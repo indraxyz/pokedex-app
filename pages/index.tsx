@@ -160,13 +160,16 @@ const Pokemon = () => {
               <Grid key={i} size={{ xs: 2, sm: 4, md: 4 }}>
                 <Card>
                   <CardActionArea onClick={() => detailPokemon(idPokemon)}>
-                    <CardMedia
-                      component="img"
-                      image={`${img_url + idPokemon}.png`}
-                      alt={p.name}
-                      loading="lazy"
-                      className="w-52 sm:w-72 flex justify-self-center"
-                    />
+                    <div className="flex justify-center">
+                      <CardMedia
+                        component="img"
+                        image={`${img_url + idPokemon}.png`}
+                        alt={p.name}
+                        loading="lazy"
+                        className="w-52 sm:w-72"
+                      />
+                    </div>
+
                     <CardContent>
                       <Typography
                         gutterBottom
