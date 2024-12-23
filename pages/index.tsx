@@ -165,7 +165,7 @@ const Pokemon = () => {
                       image={`${img_url + idPokemon}.png`}
                       alt={p.name}
                       loading="lazy"
-                      className="w-52 sm:w-72 justify-self-center"
+                      className="w-52 sm:w-72 !place-self-center !justify-self-center"
                     />
                     <CardContent>
                       <Typography
@@ -213,6 +213,7 @@ const Pokemon = () => {
             position: "absolute",
             right: 18,
             top: 8,
+            zIndex: 9999,
             color: (theme) => theme.palette.grey[500],
           }}
         >
@@ -221,7 +222,7 @@ const Pokemon = () => {
         <DialogContent>
           {/* sign in form or sosmed acc */}
           <Box component={"div"} className="space-y-6">
-            <Box className="justify-self-center">
+            <Box className="!place-self-center !justify-self-center">
               <img
                 src={pokemon.image}
                 alt={pokemon.name}

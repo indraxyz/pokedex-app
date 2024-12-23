@@ -85,7 +85,10 @@ const PokemonDetail = ({ query }: Props) => {
 
       <Button onClick={() => router.push(`/`)}>Back to Pokedex</Button>
 
-      <Box component={"div"} className="justify-self-center">
+      <Box
+        component={"div"}
+        className="!place-self-center !justify-self-center"
+      >
         {/* image */}
         <img
           src={pokemon.image}
